@@ -104,11 +104,11 @@ databaseController.getItinerary = (req, res, next) => {
 };
 
 databaseController.getActivities = (req, res, next) => {
-  const accountID = [1];
+  const accountID = [25];
   // const accountID = req.cookies.accountID; //Account ID is obtained from a cookie.
   // const accountID = [res.locals.accountID];
   const queryString =
-    'SELECT i.*, y.name AS activity_name, y.price AS activity_price FROM itinerary i LEFT OUTER JOIN itinerary_activity x on i._id = x.itinerary_id LEFT OUTER JOIN activity y ON x.activity_id = y._id WHERE account_id = $1;';
+    'SELECT i.*, y.name AS activity_name, y.price AS activity_price FROM itinerary i JOIN itinerary_activity x on i._id = x.itinerary_id JOIN activity y ON x.activity_id = y._id WHERE account_id = $1;';
   // let queryString = 'SELECT i.*, c.name AS country_name, c.currency_code AS currency_code, f.name AS flight_name, f.price AS flight_price, h.name AS hotel_name, h.price AS hotel_price, u.name AS name, u.currency AS user_currency FROM itinerary i LEFT OUTER JOIN country c on i.country_id = c._id LEFT OUTER JOIN flight f on i.flight_id = f._id LEFT OUTER JOIN hotel h on i.hotel_id = h._id LEFT OUTER JOIN account u ON i.account_id = u._id WHERE account_id = $1;'
   query(queryString, accountID)
     .then((data) => {
@@ -242,7 +242,6 @@ databaseController.addAccount = (req, res, next) => {
   }
   
   databaseController.addItinerary = (req, res, next) => {
-
     const { flightId, hotelId, countryId } = res.locals;
     const { accountID } = req.cookies;
     const parameters = [countryId, flightId, hotelId, accountID];
@@ -260,6 +259,47 @@ databaseController.addAccount = (req, res, next) => {
       })
   }
   
+  databaseController.addActivity = (req, res, next) => {
+    //!  Need to persist itinerary id from the request object for the next middleware
+    // Add activity name and activity cost from req.body to a new array
+    const params = [req.body.activityName, req.body.activityCost];
+    console.log(params);
+    // Query will add activity name and cost to activity table and return its id
+    const text = "INSERT INTO activity(name, price) VALUES($1, $2) RETURNING _id";
+    query(text, params)
+      .then((data) => {
+        console.log('Activity ID: ', data.rows[0]._id);
+        // Save the activity id in res.locals
+        res.locals.activityId = data.rows[0]._id;
+        return next();
+      })
+      .catch((err) => {
+        return next({
+         log: `databaseController.addActivity: ERROR ${err}`,
+         message: 'Error occurred in databaseController.addActivity. Check server log for more details',
+        });
+      });
+  };
+  databaseController.addItineraryActivity = (req, res, next) => {
+    //!  Need to persist itinerary id from the request object for the next middleware
+    // Add activity name and activity cost from req.body to a new array
+    const parameters = [req.body.itineraryId, res.locals.activityId];
+    // Query will add activity name and cost to activity table and return its id
+    const text = 'INSERT INTO itinerary_activity(itinerary_id, activity_id) VALUES($1, $2) RETURNING _id;';
+    query(text, parameters)
+      .then((data) => {
+        // console.log(data.rows[0]._id);
+        console.log('Successfully added activity to DB: ', data.rows[0]._id);       
+        return next();
+      })
+      .catch((err) => {
+        return next({
+         log: `databaseController.addItineraryActivity: ERROR ${err}`,
+         message: 'Error occurred in databaseController.addItineraryActivity. Check server log for more details',
+        });
+      });
+  };
+
   databaseController.deleteAccount = (req, res, next) => {
     // write code here
     const { id } = req.query;
@@ -292,26 +332,6 @@ databaseController.deleteAccount = (req, res, next) => {
     });
 };
 
-databaseController.addActivity = (req, res, next) => {
-  //! ! Need to persist itinerary id from the request object for the next middleware
-  // Add activity name and activity cost from req.body to a new array
-  const activity = [req.body.activityName, req.body.activityCost];
-  // Query will add activity name and cost to activity table and return its id
-  const queryString = 'INSERT INTO activity(name, price) VALUES($1, $2) RETURNING _ID;';
-  query(queryString, activity)
-    .then((data) => {
-      // console.log(data.rows[0]._id);
-      // Save the activity id in res.locals
-      res.locals.activityID = data.rows[0]._id;
-      return next();
-    })
-    .catch((err) =>
-      res.render('../../client/signup', {
-        error: `databaseController.addAccount : ERROR: ${err}`,
-        message: { err: 'error occurred in databaseController.addAccount' },
-      })
-    );
-};
 
 databaseController.deleteItinerary = (req, res, next) => {
   // write code here

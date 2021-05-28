@@ -25,13 +25,29 @@ router.post('/itinerary',
   databaseController.addItineraryFlight, 
   databaseController.addItinerary,
   (req, res) => {
-    console.log('RES LOCALS: ', res.locals);
-    return res.status(200).render(path.resolve(__dirname, '../../index.ejs'));
+    // console.log('RES LOCALS: ', res.locals);
+    return res.status(200);
+    // return res.status(200).render(path.resolve(__dirname, '../../index.ejs'));
 });
+
+router.post('/activity',
+  databaseController.addActivity,
+  databaseController.addItineraryActivity,
+  (req, res) => {
+    console.log("Got through homepage/activity middleware")
+    return res.status(200).render(path.resolve(__dirname, '../../index.ejs'));
+  });
 
 // Handle requests to 'homepage/getItinerary', invoke getItinerary method on databaseController - returned itinerary JS object will be sent back to client after being converted back to JSON, along with 200 status
 router.get('/getItinerary', databaseController.getItinerary, (req, res) => {
   return res.status(200).json(res.locals.itinerary);
 });
+
+
+// Handle requests to '/db/getactivities', pull activities for specific user and send back to client
+router.use('/getActivities', databaseController.getActivities, (
+  req,
+  res // Why db/getactivities and not just getactivities?
+) => res.status(200).json(res.locals.activities));
 
 module.exports = router;

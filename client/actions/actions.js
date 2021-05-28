@@ -32,6 +32,13 @@ export const updateCurrency = (data) => {
     payload: data
   }
 }
+
+export const updateActivities = (data) => {
+  return {
+    type: 'types.UPDATE_ACTIVITIES',
+    payload: data
+  }
+}
 // export const updateHotel = (text) => {
 //   return {
 //     type: 'hotel/updateHotel',

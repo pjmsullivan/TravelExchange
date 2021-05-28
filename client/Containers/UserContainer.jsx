@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import ItineraryCreator from '../components/ItineraryCreator.jsx'
+import ActivityCreator from '../components/ActivityCreator.jsx'
 
 function UserContainer(props) {
   //variable?
@@ -24,15 +25,19 @@ function UserContainer(props) {
   }, [dispatch]);
 
   // useSelector is the equivalent of map state to props and firstName is rendered to the screen
-  const firstName = useSelector(state => state.octo.username);
+  const { username, currencyType } = useSelector(state => state.octo);
+
 
   return (
     <div>
         <div>
-          <h1>{firstName}</h1>
+          <h1>{username}</h1>
+          <p>Your home currency is:<strong> $$$ {currencyType} $$$</strong></p>
         </div>
         <div>
           <ItineraryCreator />
+          <ActivityCreator />
+          <br></br>
         </div>  
     </div>
   );

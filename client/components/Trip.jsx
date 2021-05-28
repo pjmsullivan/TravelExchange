@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; //<-- get rid of use state and use effect?
 import { useSelector, useDispatch } from 'react-redux'
-
+import Activity from './Activity.jsx';
 const Trip = (props) => {
 
 // fetch('https://v6.exchangerate-api.com/v6/210336b0a4a601367acee4c6/latest/USD')
@@ -12,15 +12,25 @@ const Trip = (props) => {
 
     const hotelexchangeRate = parseInt(props.hotel_price) / curRates[props.currency_code]
     const flightexchangeRate = parseInt(props.flight_price) / curRates[props.currency_code]
-    console.log(curRates[props.currency_code])
 
+    const activities = [];
+    if (props.activities){
+        for (let i = 0; i < props.activities.length; i++){
+            console.log("ACTIVITIES: ", props.activities[i]);
+            activities.push(<Activity {...props.activities[i]} currency_code={props.currency_code}/>)
+        }
+    }
     return (
         <div className="trips">
+            <strong>{props._id}: </strong>
             <strong>{props.country_name} Trip</strong> 
             <br></br>
-            <br></br> 
-            <p>{props.hotel_name} {props.currency_code}{props.hotel_price}  {curCurrency}{hotelexchangeRate}   </p>
-            <p>{props.flight_name} {props.currency_code}{props.flight_price}  {curCurrency}{flightexchangeRate} </p>
+            <p>Hotel: {props.hotel_name} {Number(parseFloat(props.hotel_price).toFixed(2)).toLocaleString('en')} {props.currency_code} Conversion: {Number(parseFloat(hotelexchangeRate).toFixed(2)).toLocaleString('en')} {curCurrency}   </p>
+            <p>Flight: {props.flight_name} {Number(parseFloat(props.flight_price).toFixed(2)).toLocaleString('en')} {props.currency_code} Conversion: {Number(parseFloat(flightexchangeRate).toFixed(2)).toLocaleString('en')} {curCurrency} </p>
+            <strong>Activities:</strong>
+            {activities}
+            <br></br>
+            <strong>-----------------------------</strong>
         </div>
     )
 }

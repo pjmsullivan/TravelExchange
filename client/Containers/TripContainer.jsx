@@ -10,11 +10,11 @@ import Styles from '/public/styles.css';
 
 
 function TripContainer() {
-  // const count = useSelector(state => state.counter.count);
+
   const dispatch = useDispatch();
 
   const curCurrency = useSelector(state => state.octo.currencyType)
-  fetch(`https://v6.exchangerate-api.com/v6/210336b0a4a601367acee4c6/latest/USD`)
+  fetch(`https://v6.exchangerate-api.com/v6/210336b0a4a601367acee4c6/latest/${curCurrency}`)
     .then(res => res.json())
     .then(data => {
       dispatch({ type: 'UPDATE_CURRENCY', payload: data })
@@ -22,13 +22,15 @@ function TripContainer() {
     .catch(err => console.log(err));
     //get user native currency
 
-  const itinerary = useSelector(state => state.octo.itineraries)
-  //console.log(itinerary);
+  // Array of itinerary ids
+  const itinerary_id = Object.keys(useSelector(state => state.octo.itineraries));
+  // Object of itineraries
+  const itineraries = useSelector(state => state.octo.itineraries);
   const trips = [];
-
-  for (let i = 0; i < itinerary.length; i++) {
-    trips.push( <Trip{...itinerary[i]} key={itinerary[i]._id} /> )
-  }
+  
+  itinerary_id.forEach((currentId) => {
+    trips.push( <Trip {...itineraries[currentId]} key={currentId}/> );
+  });
 
   return (
     // opporutniy to clean up

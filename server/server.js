@@ -79,12 +79,6 @@ app.post(
     res.render('../index')
 );
 
-// Handle requests to '/db/getactivities', pull activities for specific user and send back to client
-app.use('/db/getactivities', databaseController.getActivities, (
-  req,
-  res // Why db/getactivities and not just getactivities?
-) => res.status(200).json(res.locals.activities));
-
 // Handles post request to add new activity to itinerary
 // Note to populate itinerary_activity table and return all activities associated with the current itinerary id
 app.post(
