@@ -20,15 +20,15 @@ const initialState = {
   //  conversion_Currency : '',
   exchangeRate: [],
   // itineraries: [], // shape of data -> array of objects: [{activities: [{}]}]
-  itineraries: {}, //change itineraries to this
+  itineraries: {}, // change itineraries to this
 };
 
-const floppyReducers = (state = initialState, action) => {
+const exchangeReducers = (state = initialState, action) => {
   switch (action.type) {
     case 'UPDATE_USER': {
       let newUsername = state.username;
       let newId = state.id;
-      //const newItineraries = [];
+      // const newItineraries = [];
       const newItineraries = {};
       const newCurrency = action.payload[0].user_currency;
 
@@ -39,9 +39,8 @@ const floppyReducers = (state = initialState, action) => {
 
       for (let i = 0; i < allItineraries.length; i++) {
         newItineraries[allItineraries[i]._id] = allItineraries[i];
-        //newItineraries.push(allItineraries[i]);
+        // newItineraries.push(allItineraries[i]);
       }
-
 
       return {
         ...state,
@@ -51,18 +50,17 @@ const floppyReducers = (state = initialState, action) => {
         itineraries: newItineraries,
       };
     }
-    
+
     // new function that takes activities and inserts them into appropriate itinerary
     case 'UPDATE_ACTIVITIES': {
       // make a deep copy of the itineraries object
       const newItineraries = JSON.parse(JSON.stringify(state.itineraries));
-      
 
-      //for loop for each activity
+      // for loop for each activity
       action.payload.forEach((currentActivity) => {
         // check the activity's itinerary_id,
         const itineraryMatchId = currentActivity._id;
-        console.log({itineraryMatchId});
+        console.log({ itineraryMatchId });
         const itineraryMatch = newItineraries[itineraryMatchId];
         // grab the correct itinerary object
         // check if object already has an activity property (array),
@@ -70,14 +68,15 @@ const floppyReducers = (state = initialState, action) => {
         // if it doesn't, need to add a new property called activity initialize it to an array with one activity object.
 
         console.log('itineraryMatch: ', itineraryMatch);
-        itineraryMatch.activities ? itineraryMatch.activities.push(currentActivity) : itineraryMatch.activities = [currentActivity];
+        itineraryMatch.activities
+          ? itineraryMatch.activities.push(currentActivity)
+          : (itineraryMatch.activities = [currentActivity]);
       });
       return {
         ...state,
         itineraries: newItineraries,
-      }      
+      };
     }
-
 
     case 'UPDATE_CURRENCY': {
       const newExchangeRate = action.payload.conversion_rates;
@@ -90,4 +89,4 @@ const floppyReducers = (state = initialState, action) => {
       return state;
   }
 };
-export default floppyReducers;
+export default exchangeReducers;

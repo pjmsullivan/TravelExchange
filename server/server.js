@@ -2,7 +2,7 @@
  * ************************************
  *
  * @module Server
- * @author Scratch: Team Photogenicus (Phillip, Sean, Peter, Alex and Brian), Iteration: Team Floppy (Sully, Robleh, Ken, Angela, Lorenzo)
+ * @author Creation Team: Phillip, Sean, Peter, Alex, and Brian, Iteration Team: Sully, Robleh, Ken, Angela, Lorenzo
  * @date 5/25/2021
  * @description Main server file
  *
@@ -76,7 +76,7 @@ app.post(
   (req, res) =>
     // user attempts to login, verify info is accurate, then redirect to user's home page
     // return res.locals.passwords
-    res.render('../index')
+    res.render('../index'),
 );
 
 // Handles post request to add new activity to itinerary
@@ -87,7 +87,7 @@ app.post(
   databaseController.createItineraryActivity,
   (req, res) =>
     // when user successfully adds an activity, currently just returns status 200 and index.html
-    res.status(200).send('Brian, please fix this return statement')
+    res.status(200).send('Brian, please fix this return statement'),
 );
 
 // global error handler

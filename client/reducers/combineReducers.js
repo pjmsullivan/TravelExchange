@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 
 // import all reducers here
-import floppyReducers from './floppyReducers.js';
+import exchangeReducers from './reducers.js';
 
 // combine reducers
 const reducers = combineReducers({
   // if we had other reducers, they would go here
-  octo: floppyReducers,
+  octo: exchangeReducers,
 });
 
 // make the combined reducers available for import

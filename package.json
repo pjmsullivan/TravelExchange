@@ -1,5 +1,5 @@
 {
-  "name": "FloppyCoin",
+  "name": "TravelExchange",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/floppy-floppy-sea-spiders/floppy-coin.git"
+    "url": "git+https://github.com/pjmsullivan/TravelExchange"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/floppy-floppy-sea-spiders/floppy-coin/issues"
+    "url": "https://github.com/pjmsullivan/TravelExchange/issues"
   },
-  "homepage": "https://github.com/floppy-floppy-sea-spiders/floppy-coin",
+  "homepage": "https://github.com/pjmsullivan/TravelExchange",
   "devDependencies": {
     "@babel/core": "^7.14.3",
     "@babel/plugin-transform-async-to-generator": "^7.13.0",
